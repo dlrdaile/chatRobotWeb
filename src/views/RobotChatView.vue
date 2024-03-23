@@ -191,6 +191,7 @@ export default {
       const {IMUI} = this.$refs;
       //将data.content使用。进行分割并遍历
       // 失败
+      console.log(data)
       if (data.end === 2) {
         Message({
           message: '炸弹爆炸，当前游戏失败',
@@ -205,9 +206,11 @@ export default {
         this.appendEventMessage(data, content);
         this.contactSet[data.toContactId].status = ContactStatus.Failed;
         this.getNewContact();
-      } else if (data.end === 1) {
+      }
+      else if (data.end === 1) {
         this.handleSuccess()
-      } else {
+      }
+      else {
 
         if (this.contactSet[data.toContactId].status === ContactStatus.Failed
             || this.contactSet[data.toContactId].status === ContactStatus.Succeed) {

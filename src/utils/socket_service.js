@@ -231,7 +231,7 @@ export default class SocketService {
             return;
         }
         let id = utilFunction.generateRandId();
-        this.ws = new WebSocket(`ws://${config.baseIp}:${config.basePort}/ws/chat/${id}/${store.getters.api_key}`)
+        this.ws = new WebSocket(`ws://110.40.141.245:8000/api/ws/chat/${id}/${store.getters.api_key}`)
         this.registerCallBack("heartBeat", this.pong)
         // 连接成功的事件
         this.ws.onopen = () => {

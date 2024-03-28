@@ -102,17 +102,17 @@ export default {
             this.$router.push({path: '/chat'})
                 .then(() => {
                   this.loading = false
-                  setTimeout(() => {
-                    this.$store
-                        .dispatch('api_key_valid/validateApiKey', this.loginForm)
-                        .then(
-                            () => {
-                            }
-                        ).catch((e) => {
-                      console.log(e)
-                      this.$router.push({"path": "/login"})
-                    })
-                  }, 10000)
+                  // setTimeout(() => {
+                  //   this.$store
+                  //       .dispatch('api_key_valid/validateApiKey', this.loginForm)
+                  //       .then(
+                  //           () => {
+                  //           }
+                  //       ).catch((e) => {
+                  //     console.log(e)
+                  //     this.$router.push({"path": "/login"})
+                  //   })
+                  // }, 10000)
                 }).catch((e) => {
               console.log(e)
             })
@@ -120,12 +120,13 @@ export default {
 
           })
           .catch(() => {
+            this.loading = false;
             // this.$router.push({ path: this.redirect || '/' })
           })
     },
     // 用户点击遮罩层，应该关闭模态框
     close() {
-      this.isShow = false
+      this.loading = false;
     }
   }
 }

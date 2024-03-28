@@ -80,8 +80,6 @@ export default {
         {
           text: "开启新一轮聊天",
           click: (contact, instance, hide) => {
-            // console.log("开启新一轮聊天", contact, instance);
-            // this.contactSet[].status = ContactStatus.NoStart;
             this.getNewContact(contact.id)
             hide();
           },
@@ -152,7 +150,22 @@ export default {
         type: 'error',
         duration: 2 * 1000
       })
-      this.isGameOver = true;
+      // this.isGameOver = true;
+      // const {IMUI} = this.$refs;
+      // const messages = IMUI.getCurrentMessages();
+      // const message = messages[messages.length - 1];
+      // if (messages.length > 0 && message.fromUser.id === this.user.id) {
+      //   const update = {
+      //     id: message.id,
+      //     status: "failed",
+      //   };
+      //   if (message.type === "event") {
+      //     update.fromUser = this.user;
+      //   }
+      //   IMUI.updateMessage(update);
+      //   IMUI.messageViewToBottom();
+      // }
+
     },
     scrollToTop() {
       document.body.scrollIntoView();
@@ -191,7 +204,6 @@ export default {
       const {IMUI} = this.$refs;
       //将data.content使用。进行分割并遍历
       // 失败
-      console.log(data)
       if (data.end === 2) {
         Message({
           message: '炸弹爆炸，当前游戏失败',
@@ -206,11 +218,9 @@ export default {
         this.appendEventMessage(data, content);
         this.contactSet[data.toContactId].status = ContactStatus.Failed;
         this.getNewContact();
-      }
-      else if (data.end === 1) {
+      } else if (data.end === 1) {
         this.handleSuccess()
-      }
-      else {
+      } else {
 
         if (this.contactSet[data.toContactId].status === ContactStatus.Failed
             || this.contactSet[data.toContactId].status === ContactStatus.Succeed) {
@@ -320,6 +330,7 @@ export default {
           socketType: 'userInfo'
         }
         this.$socket.send(sendData)
+
         message.sendTime = this.contactSet[message.toContactId].currentTime;
         setTimeout(() => {
           next();
@@ -358,15 +369,15 @@ export default {
         instance.updateMessage({
           id: message.id,
           status: "going",
-          content: "正在重新发送消息...",
         });
         setTimeout(() => {
           instance.updateMessage({
             id: message.id,
             status: "succeed",
-            content: "发送成功",
           });
-        }, 2000);
+        }, 1000);
+        this.handleSend(message, () => {
+        });
       }
     },
   },

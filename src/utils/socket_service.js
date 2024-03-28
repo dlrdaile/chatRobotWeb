@@ -122,6 +122,7 @@ import store from '@/store'
 //   }
 // }
 import config from "@/config";
+import {env} from "lemon-imui/.eslintrc";
 
 export default class SocketService {
     /**
@@ -151,8 +152,10 @@ export default class SocketService {
     // 重新连接尝试的次数
     connectRetryCount = 0
 
+    id = utilFunction.generateRandId();
+
     lockReconnect = false; //是否真正建立连接
-    timeout = 20 * 1000; //20秒一次心跳
+    timeout = 10 * 1000; //20秒一次心跳
     timeoutObj = null; //心跳倒计时
     serverTimeoutObj = null; //服务心跳倒计时
     timeoutnum = null; //断开 重连倒计时
@@ -230,17 +233,17 @@ export default class SocketService {
             })
             return;
         }
-        let id = utilFunction.generateRandId();
-        this.ws = new WebSocket(`ws://110.40.141.245:8000/api/ws/chat/${id}/${store.getters.api_key}`)
+        // this.ws = new WebSocket(`ws://chatrobotback.cpolar.top/api/ws/chat/${id}/${store.getters.api_key}`)
+        this.ws = new WebSocket(`ws://${process.env.VUE_APP_BASE_IP}:${process.env.VUE_APP_BASE_PORT}/api/ws/chat/${this.id}/${store.getters.api_key}`)
         this.registerCallBack("heartBeat", this.pong)
         // 连接成功的事件
         this.ws.onopen = () => {
-            // console.log('连接服务端成功了')
-            Message({
-                message: '连接服务端成功了！',
-                type: 'success',
-                duration: 3 * 1000
-            })
+            console.log('连接服务端成功了')
+            // Message({
+            //     message: '连接服务端成功了！',
+            //     type: 'success',
+            //     duration: 3 * 1000
+            // })
             this.connected = true
             this.start();
             // 重置重新连接的次数
@@ -249,22 +252,26 @@ export default class SocketService {
         // 1.连接服务端失败
         // 2.当连接成功之后, 服务器关闭的情况
         this.ws.onclose = () => {
-            // console.log('断开服务端')
-            Message({
-                message: '断开服务端',
-                type: 'warning',
-                duration: 3 * 1000
-            })
+            console.log('断开服务端')
+            // Message({
+            //     message: '断开服务端',
+            //     type: 'warning',
+            //     duration: 3 * 1000
+            // })
             this.connected = false
+            this.reconnect();
+            if(this.callBackMapping['backFail']){
+                this.callBackMapping['backFail'].call(this,"连接断开")
+            }
         }
         // 连接服务器失败时
         this.ws.onerror = () => {
-            // console.log('连接服务端失败')
-            Message({
-                message: '连接服务端失败！',
-                type: 'error',
-                duration: 3 * 1000
-            })
+            console.log('连接服务端失败')
+            // Message({
+            //     message: '连接服务端失败！',
+            //     type: 'error',
+            //     duration: 3 * 1000
+            // })
             this.connected = false
             this.connectRetryCount++
             // if(this.connectRetryCount < 5){

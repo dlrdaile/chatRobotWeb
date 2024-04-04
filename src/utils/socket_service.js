@@ -152,8 +152,6 @@ export default class SocketService {
     // 重新连接尝试的次数
     connectRetryCount = 0
 
-    id = utilFunction.generateRandId();
-
     lockReconnect = false; //是否真正建立连接
     timeout = 10 * 1000; //20秒一次心跳
     timeoutObj = null; //心跳倒计时
@@ -234,7 +232,7 @@ export default class SocketService {
             return;
         }
         // this.ws = new WebSocket(`ws://chatrobotback.cpolar.top/api/ws/chat/${id}/${store.getters.api_key}`)
-        this.ws = new WebSocket(`ws://${process.env.VUE_APP_BASE_IP}:${process.env.VUE_APP_BASE_PORT}/api/ws/chat/${this.id}/${store.getters.api_key}`)
+        this.ws = new WebSocket(`${process.env.VUE_APP_WEBSOCKET_URL}/chat/${store.getters.client_id}`)
         this.registerCallBack("heartBeat", this.pong)
         // 连接成功的事件
         this.ws.onopen = () => {
@@ -260,9 +258,9 @@ export default class SocketService {
             // })
             this.connected = false
             this.reconnect();
-            if(this.callBackMapping['backFail']){
-                this.callBackMapping['backFail'].call(this,"连接断开")
-            }
+            // if (this.callBackMapping['backFail']) {
+            //     this.callBackMapping['backFail'].call(this, "连接断开")
+            // }
         }
         // 连接服务器失败时
         this.ws.onerror = () => {

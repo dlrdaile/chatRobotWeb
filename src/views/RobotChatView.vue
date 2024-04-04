@@ -3,15 +3,15 @@
     <div class="scroll-top" @click="scrollToTop">🚀</div>
     <div class="imui-center">
       <lemon-imui :user="user" ref="IMUI" :contextmenu="contextmenu" :contact-contextmenu="contactContextmenu"
-                  :sendKey="sendKey"
                   :theme="theme" :hide-menu="hideMenu" :hide-menu-avatar="hideMenuAvatar"
                   :hide-message-name="hideMessageName"
                   :hide-message-time="hideMessageTime" @change-menu="handleChangeMenu"
                   @change-contact="handleChangeContact"
                   @pull-messages="handlePullMessages" @message-click="handleMessageClick"
                   @menu-avatar-click="handleMenuAvatarClick" @send="handleSend">
+<!--        :sendKey="sendKey"-->
         <template #editor-footer>
-          使用 enter 快捷发送消息
+          使用 ctrl enter 快捷发送消息
         </template>
         <template #cover>
           <div class="cover">
@@ -73,9 +73,9 @@ export default {
       // currentTime: new Date(new Date().setHours(8, 0, 0, 0)).getTime(),
       currentContactTimes: 0,
       contactSet: {},
-      sendKey: (e) => {
-        return e.keyCode === 13;
-      },
+      // sendKey: (e) => {
+      //   return e.keyCode === 13;
+      // },
       contactContextmenu: [
         {
           text: "开启新一轮聊天",

@@ -18,7 +18,7 @@
       <!--          prefix-icon="el-icon-user-solid"-->
       <!--        />-->
       <!--      </el-form-item>-->
-      <el-form-item label="api_key" prop="password">
+      <el-form-item label="api_key" prop="api_key" >
         <el-input
             v-model="loginForm.api_key"
             type="password"
@@ -26,11 +26,32 @@
             :show-password="true"
             placeholder="api_key"
             prefix-icon="el-icon-lock"
+            clearable
         />
+      </el-form-item>
+      <el-form-item label="platform" prop="llm_platform" >
+        <el-select v-model="loginForm.llm_platform" clearable placeholder="请选择大模型平台" @change="changeLLMPlatform">
+          <el-option
+              v-for="item in llm_platform_list"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="model" prop="llm_model" >
+        <el-select v-model="loginForm.llm_model" clearable placeholder="请选择大模型模型">
+          <el-option
+              v-for="item in llm_model_list"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+          </el-option>
+        </el-select>
       </el-form-item>
       <el-form-item class="bottom-position">
         <el-button :loading="loading" type="primary" @click="submitForm('ruleForm')">提交</el-button>
-        <el-button @click="$refs.ruleForm.resetFields()">重置</el-button>
+<!--        <el-button @click="$refs.ruleForm.">重置</el-button>-->
       </el-form-item>
 
     </el-form>
@@ -53,8 +74,27 @@ export default {
       isShow: false,
       loginForm: {
         // username: '',
-        api_key: ''
+        api_key: '',
+        client_id: this.$store.getters.client_id,
+        llm_model: '',
+        llm_platform: '',
       },
+      llm_platform_list: [
+        {
+          value: 'ZhiPu',
+          label: '智谱清言'
+        },
+        {
+          value: 'TongYi',
+          label: '通义千问'
+        }
+      ],
+      llm_model_list: [
+        {
+          value: 'glm-4',
+          label: 'glm-4'
+        }
+      ],
       rules: {
         // username: [
         //   { required: true, message: '请输入用户名', trigger: 'blur' },
@@ -63,6 +103,12 @@ export default {
         api_key: [
           {required: true, message: '请输入api_key', trigger: 'blur'},
           {min: 10, max: 100, message: '长度在 10 到 100 个字符', trigger: 'blur'}
+        ],
+        llm_platform: [
+          {required: true, message: '请选择大模型平台', trigger: 'change'}
+        ],
+        llm_model: [
+          {required: true, message: '请选择大模型模型', trigger: 'change'}
         ]
       },
       loading: false
@@ -74,8 +120,35 @@ export default {
         this.redirect = route.query && route.query.redirect
       },
       immediate: true
-    }
+    },
   },
+  // computed: {
+  //   llm_model_list: function () {
+  //     if (this.loginForm.llm_platform === 'ZhiPu') {
+  //       return [
+  //         {
+  //           value: 'ZhiPu',
+  //           label: '张学友'
+  //         },
+  //         {
+  //           value: 'ZhiPu',
+  //           label: '张学友'
+  //         }
+  //       ]
+  //     } else if (this.loginForm.llm_platform === 'TongYi') {
+  //       return [
+  //         {
+  //           value: 'TongYi',
+  //           label: '阿里'
+  //         },
+  //         {
+  //           value: 'TongYi',
+  //           label: '阿里'
+  //         }
+  //       ]
+  //     }
+  //     return []
+  //   },
   methods: {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
@@ -88,6 +161,36 @@ export default {
           return false
         }
       })
+    },
+    changeLLMPlatform(select_value) {
+      if (select_value === "ZhiPu") {
+        this.llm_model_list = [
+          {
+            value: 'glm-4',
+            label: 'glm-4'
+          }
+        ]
+      } else if (select_value === "TongYi") {
+        this.llm_model_list = [
+          {
+            value: 'qwen-turbo',
+            label: 'qwen-turbo'
+          },
+          {
+            value: 'qwen-plus',
+            label: 'qwen-plus'
+          },
+          {
+            value: 'qwen-max',
+            label: 'qwen-max'
+          },
+          {
+            value: 'qwen-max-longcontext',
+            label: 'qwen-max-longcontext'
+          }
+        ]
+      }
+      return []
     },
     success(msg) {
       this.isShow = false // 通过验证后，需要手动隐藏模态框

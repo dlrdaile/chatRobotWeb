@@ -10,10 +10,10 @@ const routes = [
         component: () => import(/* webpackChunkName: "about" */ '@/views/Login.vue')
     },
     {
-        path: '/chat',
+        path: '/',
         name: 'chat',
         component: () => import(/* webpackChunkName: "about" */ '@/views/RobotChatView.vue')
-    }
+    },
 ]
 
 const router = new VueRouter({

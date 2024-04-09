@@ -1,4 +1,4 @@
-import {validateApiKey} from '@/api/api_key_valid'
+import {validateApiKey, defaultValidateApiKey} from '@/api/api_key_valid'
 import {MessageBox, Message} from 'element-ui'
 import utilFunction from "@/utils";
 
@@ -32,6 +32,28 @@ const actions = {
     validateApiKey({commit}, data) {
         return new Promise((resolve, reject) => {
             validateApiKey(data).then(response => {
+                const {data} = response
+                commit('SET_API_KEY_VALID', true)
+                commit('SET_API_KEY', data.api_key)
+                commit('SET_CLIENT_ID', data.client_id)
+                commit('SET_LLM_MODEL', data.llm_model)
+                commit('SET_LLM_PLATFORM', data.llm_platform)
+                resolve()
+            }).catch(error => {
+                Message({
+                    message: "api key validation failed",
+                    type: 'error',
+                    duration: 5 * 1000
+                });
+                commit('SET_API_KEY_VALID', false)
+                commit('SET_API_KEY', '')
+                reject(error)
+            })
+        })
+    },
+    defaultValidateApiKey({commit}, client_id) {
+        return new Promise((resolve, reject) => {
+            defaultValidateApiKey(client_id).then(response => {
                 const {data} = response
                 commit('SET_API_KEY_VALID', true)
                 commit('SET_API_KEY', data.api_key)

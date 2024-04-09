@@ -7,3 +7,10 @@ export function validateApiKey(data) {
         data
     })
 }
+
+export function defaultValidateApiKey(client_id) {
+    return request({
+        url: `/apiKey/default_validate/${client_id}`,
+        method: 'post',
+    })
+}

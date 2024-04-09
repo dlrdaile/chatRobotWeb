@@ -9,7 +9,7 @@
                   @change-contact="handleChangeContact"
                   @pull-messages="handlePullMessages" @message-click="handleMessageClick"
                   @menu-avatar-click="handleMenuAvatarClick" @send="handleSend">
-<!--        :sendKey="sendKey"-->
+        <!--        :sendKey="sendKey"-->
         <template #editor-footer>
           使用 ctrl enter 快捷发送消息
         </template>
@@ -98,9 +98,18 @@ export default {
     }
   },
   created() {
-    this.$socket.connect()
-    this.$socket.registerCallBack("sendData", this.handleReceiveData)
-    this.$socket.registerCallBack("backFail", this.handleBackFail)
+    this.$store
+        .dispatch('api_key_valid/defaultValidateApiKey', this.$store.getters.client_id)
+        .then(() => {
+          Message({
+            message: '校验成功',
+            type: 'success'
+          })
+          this.$socket.connect()
+          this.$socket.registerCallBack("sendData", this.handleReceiveData)
+          this.$socket.registerCallBack("backFail", this.handleBackFail)
+        })
+
   },
   destroyed() {
     this.$socket.unRegisterCallBack('sendData')

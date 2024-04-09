@@ -2,32 +2,35 @@
   <div id="chat-robot">
     <div class="scroll-top" @click="scrollToTop">🚀</div>
     <div class="imui-center">
-      <lemon-imui :user="user" ref="IMUI" :contextmenu="contextmenu"
-                  :contact-contextmenu="contactContextmenu"
-                  :theme="theme" :hide-menu="hideMenu" :hide-menu-avatar="hideMenuAvatar"
-                  :hide-message-name="hideMessageName"
-                  :hide-message-time="hideMessageTime" @change-menu="handleChangeMenu"
-                  @change-contact="handleChangeContact"
-                  @pull-messages="handlePullMessages" @message-click="handleMessageClick"
-                  @menu-avatar-click="handleMenuAvatarClick" @send="handleSend">
-        <!--        :sendKey="sendKey"-->
-        <template #editor-footer>
-          使用 ctrl enter 快捷发送消息
-        </template>
-        <template #cover>
-          <div class="cover">
-            <i class="lemon-icon-message"></i>
-            <p><b>自定义封面 Lemon</b> IMUI</p>
-          </div>
-        </template>
-        <!--        <template #message-title="contact">-->
-        <!--          <span>{{ contact.displayName }}</span>-->
-        <!--          <small class="more" @click="changeDrawer(contact, $refs.IMUI)">{{-->
-        <!--              ($refs.IMUI ? $refs.IMUI.drawerVisible : false) ? "关闭" : "打开"-->
-        <!--            }}抽屉</small>-->
-        <!--          <br/>-->
-        <!--        </template>-->
-      </lemon-imui>
+      <div class="chat-robot-wrapper">
+        <el-button class="show-rules-btn" @click="handleShowRules">查看游戏规则</el-button>
+        <lemon-imui :user="user" ref="IMUI" :contextmenu="contextmenu"
+                    :contact-contextmenu="contactContextmenu"
+                    :theme="theme" :hide-menu="hideMenu" :hide-menu-avatar="hideMenuAvatar"
+                    :hide-message-name="hideMessageName"
+                    :hide-message-time="hideMessageTime" @change-menu="handleChangeMenu"
+                    @change-contact="handleChangeContact"
+                    @pull-messages="handlePullMessages" @message-click="handleMessageClick"
+                    @menu-avatar-click="handleMenuAvatarClick" @send="handleSend">
+          <!--        :sendKey="sendKey"-->
+          <template #editor-footer>
+            使用 ctrl enter 快捷发送消息
+          </template>
+          <template #cover>
+            <div class="cover">
+              <i class="lemon-icon-message"></i>
+              <p><b>自定义封面 Lemon</b> IMUI</p>
+            </div>
+          </template>
+          <!--        <template #message-title="contact">-->
+          <!--          <span>{{ contact.displayName }}</span>-->
+          <!--          <small class="more" @click="changeDrawer(contact, $refs.IMUI)">{{-->
+          <!--              ($refs.IMUI ? $refs.IMUI.drawerVisible : false) ? "关闭" : "打开"-->
+          <!--            }}抽屉</small>-->
+          <!--          <br/>-->
+          <!--        </template>-->
+        </lemon-imui>
+      </div>
     </div>
   </div>
 
@@ -393,6 +396,9 @@ export default {
         });
       }
     },
+    handleShowRules() {
+      showRules()
+    }
   },
 
 }
@@ -409,9 +415,11 @@ body
   background #f6f6f6 !important
 
 #chat-robot
-  width 90%
   height 100%
+  width 100%
   margin 0 auto
+  //background url("@/assets/images/chat-box-bg.jpg") no-repeat
+  //background-size cover
 
   .scroll-top
     cursor pointer
@@ -520,8 +528,13 @@ a
 .imui-center
   height 100%
   display flex
+  flex-direction column
   justify-content center
   align-items center
+  .chat-robot-wrapper
+    width fit-content
+    .show-rules-btn
+      width 100%
 
   .lemon-wrapper
     border: 1px solid #ddd;

@@ -43,11 +43,11 @@ service.interceptors.response.use(
     },
     error => {
         Message({
-            message: error.response.data.msg || 'default error',
+            message: error.response?.data.msg || 'default error',
             type: 'error',
             duration: 5 * 1000
         })
-        if (error.response.data.code === 401) {
+        if (error.response?.data.code === 401) {
             // to re-login
             console.log(123)
             MessageBox.confirm('你的token过期啦，请刷新页面重新登录', {

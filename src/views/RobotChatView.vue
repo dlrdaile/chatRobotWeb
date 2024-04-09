@@ -2,7 +2,8 @@
   <div id="chat-robot">
     <div class="scroll-top" @click="scrollToTop">🚀</div>
     <div class="imui-center">
-      <lemon-imui :user="user" ref="IMUI" :contextmenu="contextmenu" :contact-contextmenu="contactContextmenu"
+      <lemon-imui :user="user" ref="IMUI" :contextmenu="contextmenu"
+                  :contact-contextmenu="contactContextmenu"
                   :theme="theme" :hide-menu="hideMenu" :hide-menu-avatar="hideMenuAvatar"
                   :hide-message-name="hideMessageName"
                   :hide-message-time="hideMessageTime" @change-menu="handleChangeMenu"
@@ -35,6 +36,7 @@
 import utilFunction from '@/utils/index'
 import EmojiData from "@/data/database/emoji";
 import {Message} from 'element-ui'
+import showRules from "@/utils/showRules";
 
 const ContactStatus = {
   NoStart: "noStart",
@@ -98,17 +100,17 @@ export default {
     }
   },
   created() {
-    this.$store
-        .dispatch('api_key_valid/defaultValidateApiKey', this.$store.getters.client_id)
-        .then(() => {
-          Message({
-            message: '校验成功',
-            type: 'success'
-          })
-          this.$socket.connect()
-          this.$socket.registerCallBack("sendData", this.handleReceiveData)
-          this.$socket.registerCallBack("backFail", this.handleBackFail)
-        })
+    // this.$store
+    //     .dispatch('api_key_valid/defaultValidateApiKey', this.$store.getters.client_id)
+    //     .then(() => {
+    //       Message({
+    //         message: '校验成功',
+    //         type: 'success'
+    //       })
+    //       this.$socket.connect()
+    //       this.$socket.registerCallBack("sendData", this.handleReceiveData)
+    //       this.$socket.registerCallBack("backFail", this.handleBackFail)
+    //     })
 
   },
   destroyed() {
@@ -146,6 +148,8 @@ export default {
     IMUI.setLastContentRender("voice", message => {
       return <span>[语音]</span>;
     });
+
+    showRules()
   },
   computed: {
     currentContactStr: function () {
@@ -406,8 +410,8 @@ body
 
 #chat-robot
   width 90%
+  height 100%
   margin 0 auto
-  padding-bottom 100px
 
   .scroll-top
     cursor pointer
@@ -514,7 +518,10 @@ a
     font-weight normal
 
 .imui-center
-  margin-bottom 60px
+  height 100%
+  display flex
+  justify-content center
+  align-items center
 
   .lemon-wrapper
     border: 1px solid #ddd;
